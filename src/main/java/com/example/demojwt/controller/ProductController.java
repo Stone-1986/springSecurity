@@ -20,35 +20,35 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Page<Product>> findAll(Pageable pageable){
+    public ResponseEntity<Page<Product>> findAll(Pageable pageable) {
         Page<Product> productsPage = productService.findAll(pageable);
-        if(productsPage.hasContent()){
+        if (productsPage.hasContent()) {
             return ResponseEntity.ok(productsPage);
         }
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> findOneById(@PathVariable Long productId){
+    public ResponseEntity<Product> findOneById(@PathVariable Long productId) {
         Optional<Product> product = productService.findOneById(productId);
         return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Product> createOne(@RequestBody @Valid SaveProduct saveProduct){
+    public ResponseEntity<Product> createOne(@RequestBody @Valid SaveProduct saveProduct) {
         Product product = productService.createOne(saveProduct);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Product> updateOneById(@PathVariable Long productId ,
-                                                 @RequestBody @Valid SaveProduct saveProduct){
+    public ResponseEntity<Product> updateOneById(@PathVariable Long productId,
+                                                 @RequestBody @Valid SaveProduct saveProduct) {
         Product product = productService.updateOneById(productId, saveProduct);
         return ResponseEntity.ok(product);
     }
 
     @PutMapping("/{productId}/disabled")
-    public ResponseEntity<Product> disableOneById(@PathVariable Long productId){
+    public ResponseEntity<Product> disableOneById(@PathVariable Long productId) {
         Product product = productService.disableOneById(productId);
         return ResponseEntity.ok(product);
     }

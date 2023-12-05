@@ -15,20 +15,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handlerGenericException(Exception exception, HttpServletRequest request) {
         ApiError error = new ApiError();
-        error.setMessage("Error interno en el servidor, vuelva a intentarlo");
         error.setBackedMessage(exception.getLocalizedMessage());
-        error.setTime(LocalDateTime.now());
+        error.setUrl(request.getRequestURL().toString());
+        error.setMethod(request.getMethod());
+        error.setMessage("Error interno en el servidor, vuelva a intentarlo");
+        error.setTimeStamp(LocalDateTime.now());
         error.setHttpCode(500);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handlerMethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest request) {
-
         ApiError error = new ApiError();
+        error.setBackedMessage(exception.getLocalizedMessage());
+        error.setUrl(request.getRequestURL().toString());
+        error.setMethod(request.getMethod());
         error.setMessage("Error: la petición enviada posee un formato incorrecto");
         error.setBackedMessage(exception.getLocalizedMessage());
-        error.setTime(LocalDateTime.now());
+        error.setTimeStamp(LocalDateTime.now());
         error.setHttpCode(400);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
